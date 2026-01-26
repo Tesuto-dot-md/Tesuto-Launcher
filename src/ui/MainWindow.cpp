@@ -1125,7 +1125,7 @@ MainWindow::MainWindow(QWidget* parent)
         }
 
         for (int r = 0; r < list->count(); ++r) {
-            if (!list->item(r)->isHidden()) { list->setCurrentRow(r); break; }
+            if (!list->item(r)->isHidden()) { list->setCurrentRow(r, QItemSelectionModel::ClearAndSelect); break; }
         }
         list->setUpdatesEnabled(true);
     };
@@ -1155,7 +1155,7 @@ MainWindow::MainWindow(QWidget* parent)
             it->setHidden(!match);
         }
         for (int r = 0; r < list->count(); ++r) {
-            if (!list->item(r)->isHidden()) { list->setCurrentRow(r); break; }
+            if (!list->item(r)->isHidden()) { list->setCurrentRow(r, QItemSelectionModel::ClearAndSelect); break; }
         }
     });
 
@@ -1403,6 +1403,16 @@ MainWindow::MainWindow(QWidget* parent)
     };
     connect(list, &QListWidget::currentItemChanged, this, [=](auto*, auto*){ updateEnable(); });
     updateEnable();
+
+    QTimer::singleShot(0, this, [=]{
+        if (list->count() <= 0) return;
+        if (!list->currentItem()) {
+            list->setCurrentRow(0, QItemSelectionModel::ClearAndSelect);
+        } else {
+            list->setCurrentItem(list->currentItem(), QItemSelectionModel::ClearAndSelect);
+        }
+        updateEnable();
+    });
 
     {
         QSettings s;

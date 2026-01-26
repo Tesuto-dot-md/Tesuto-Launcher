@@ -87,6 +87,28 @@ namespace {
     }
 }
 
+// ───────────────────────────────────────────────────────────
+// CatalogProxyModel (declarations in ModManagerWidget.h)
+
+CatalogProxyModel::CatalogProxyModel(QObject* parent)
+    : QSortFilterProxyModel(parent)
+{
+}
+
+void CatalogProxyModel::setHideInstalled(bool v)
+{
+    if (hideInstalled_ == v) return;
+    beginFilterChange();
+    hideInstalled_ = v;
+    endFilterChange();
+}
+
+void CatalogProxyModel::refilter()
+{
+    beginFilterChange();
+    endFilterChange();
+}
+
 bool CatalogProxyModel::filterAcceptsRow(int source_row, const QModelIndex& source_parent) const
 {
     if (hideInstalled_) {
@@ -307,10 +329,6 @@ void ModManagerWidget::connectSignals()
     installedView_->installEventFilter(this);
 }
 
-void ModManagerWidget::setCatalogInfo(const QString& text)
-{
-    if (catalogInfo_) catalogInfo_->setText(text);
-}
 
 // ───────────────────────────────────────────────────────────
 // installed list
@@ -325,10 +343,6 @@ QString ModManagerWidget::loaderForApi() const {
     return l;
 }
 
-bool ModManagerWidget::isModrinthEnabled() const
-{
-    return actModrinth_ && actModrinth_->isChecked();
-}
 
 QString ModManagerWidget::iconCachePathFor(const QString& url) const
 {
@@ -414,6 +428,8 @@ void ModManagerWidget::applyInstalledVisual(QStandardItem* it)
 
     const QString pid = it->data(RoleProjectId).toString();
     const bool installed = !pid.isEmpty() && installedProjectIds_.contains(pid);
+    const bool checked   = (it->checkState() == Qt::Checked);
+    const bool selected  = it->data(RoleSelected).toBool();
 
     QIcon normal = it->data(RoleIconNormal).value<QIcon>();
     if (normal.isNull()) {
@@ -425,13 +441,16 @@ void ModManagerWidget::applyInstalledVisual(QStandardItem* it)
 
     if (installed) {
         it->setIcon(grayIconCached(normal));
-        it->setForeground(QBrush(Qt::gray));
+
+        // ВАЖНО:
+        // - установленный серый, НО
+        // - если выделен или выбран галочкой => текст ЧЁРНЫЙ
+        if (selected || checked) it->setForeground(QBrush(Qt::black));
+        else it->setForeground(QBrush(Qt::gray));
     } else {
         it->setIcon(normal);
-        it->setForeground(QBrush());
+        it->setForeground(QBrush(Qt::black));
     }
-
-    // bold только от галочки (chosen) — оставляем как есть в applyChosenDecor
 }
 
 void ModManagerWidget::updateCatalogInstalledDecor()
