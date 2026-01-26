@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/i18n">
+        <!-- Переводы приложения -->
+        <file>translations/ru_ru.qm</file>
+        <file>translations/en_us.qm</file>
+
+    </qresource>
+</RCC>
