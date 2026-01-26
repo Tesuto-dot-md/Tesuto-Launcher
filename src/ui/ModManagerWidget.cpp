@@ -414,10 +414,7 @@ void ModManagerWidget::applyInstalledVisual(QStandardItem* it)
 
     const QString pid = it->data(RoleProjectId).toString();
     const bool installed = !pid.isEmpty() && installedProjectIds_.contains(pid);
-    const bool checked   = (it->checkState() == Qt::Checked);
-    const bool selected  = it->data(RoleSelected).toBool();
 
-    // сохранить нормальную иконку
     QIcon normal = it->data(RoleIconNormal).value<QIcon>();
     if (normal.isNull()) {
         normal = it->icon();
@@ -428,16 +425,13 @@ void ModManagerWidget::applyInstalledVisual(QStandardItem* it)
 
     if (installed) {
         it->setIcon(grayIconCached(normal));
-
-        // ВАЖНО:
-        // - установленный серый, НО
-        // - если выделен или выбран галочкой => текст ЧЁРНЫЙ
-        if (selected || checked) it->setForeground(QBrush(Qt::black));
-        else it->setForeground(QBrush(Qt::gray));
+        it->setForeground(QBrush(Qt::gray));
     } else {
         it->setIcon(normal);
         it->setForeground(QBrush());
     }
+
+    // bold только от галочки (chosen) — оставляем как есть в applyChosenDecor
 }
 
 void ModManagerWidget::updateCatalogInstalledDecor()
