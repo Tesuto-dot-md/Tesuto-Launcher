@@ -5,7 +5,7 @@
 - Java 17+ (OpenJDK), `unzip` (for natives)
 
 ### Build
-``bash
+```bash
 mkdir -p build && cd build
 cmake .. -DCMAKE_BUILD_TYPE=Release
 cmake --build . -j
