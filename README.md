@@ -1,4 +1,4 @@
-# tesuto-launcher
+# Tesuto-Launcher
 
 ### Dependencies
 - Qt 6 (Core, Network)
