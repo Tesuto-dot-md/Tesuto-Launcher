@@ -1,21 +1,18 @@
 # tesuto-launcher
 
-
-### Зависимости
+### Dependencies
 - Qt 6 (Core, Network)
-- Java 17+ (OpenJDK), `unzip` (для natives)
+- Java 17+ (OpenJDK), `unzip` (for natives)
 
-
-### Сборка
-```bash
+### Build
+``bash
 mkdir -p build && cd build
 cmake .. -DCMAKE_BUILD_TYPE=Release
 cmake --build . -j
 ```
 
-### Примечания
-- Настройки хранятся в QSettings под `Tesuto/TesutoLauncher`.
-- Опционально можно включить хранение refresh-токена в keychain: соберите с `-DUSE_QKEYCHAIN=ON`
-  (нужен QtKeychain / qt6keychain).
-- Для распаковки natives/Temurin JRE сейчас используются внешние `unzip` и `tar`.
-  Для будущего порта на Windows лучше заменить на встроенную распаковку (libarchive / minizip / QuaZip).
+### Notes
+- Settings are stored in QSettings under `Tesuto/TesutoLauncher`.
+- Optionally, you can enable storing the refresh token in the keychain: compile with `-DUSE_QKEYCHAIN=ON`
+(requires QtKeychain / qt6keychain).
+- External `unzip` and `tar` are currently used to unpack the natives/Temurin JRE. For a future port to Windows, it is better to replace it with built-in unpacking (libarchive / minizip / QuaZip).
